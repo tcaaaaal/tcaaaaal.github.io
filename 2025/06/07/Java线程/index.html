@@ -16,7 +16,7 @@
 <meta property="og:description" content="Java线程1.1线程的创建与运行​	线程的启动必须调用 start() 方法，如果线程直接调用 run() 方法，相当于变成了普通类的执行，此时主线程将只有执行该线程 方法一,直接使用Thread12345678&#x2F;&#x2F; 创建线程对象Thread t &#x3D; new Thread() &#123;     public void run() &#123; 		&#x2F;&#x2F; 要执行的任务 	&#125;&amp;#125">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2025-06-07T13:17:47.000Z">
-<meta property="article:modified_time" content="2025-08-08T02:25:45.988Z">
+<meta property="article:modified_time" content="2025-08-08T03:12:29.003Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -188,7 +188,7 @@
 <li><p>缺点：线程类已经继承了 Thread 类无法继承其他类了，功能不能通过继承拓展（单继承的局限性）</p>
 </li>
 </ul>
-</li>
+<span id="more"></span></li>
 </ul>
 <h4 id="方法二，实现Runnable接口"><a href="#方法二，实现Runnable接口" class="headerlink" title="方法二，实现Runnable接口"></a>方法二，实现Runnable接口</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Main</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">// 创建一个实现Runnable接口的匿名内部类实例</span></span><br><span class="line">        <span class="type">Runnable</span> <span class="variable">runnable</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Runnable</span>() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">                <span class="comment">// 要执行的任务</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 使用匿名内部类实例</span></span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">Thread</span>(runnable).start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
@@ -404,7 +404,7 @@
   
 <nav id="article-nav">
   
-    <a href="/2025/06/08/Synchronized%E5%9F%BA%E7%A1%80/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2025/06/08/synchronized%E5%9F%BA%E7%A1%80/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
