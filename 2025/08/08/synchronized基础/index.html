@@ -15,12 +15,12 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="**** 4共享模型之管程临界区 Critical Section  一个程序运行多个线程本身是没有问题的  问题出在多个线程访问共享资源  多个线程读共享资源其实也没有问题  在多个线程对共享资源读写操作时发生指令交错，就会出现问题     一段代码块内如果存在对共享资源的多线程读写操作，称这段代码块为临界区 竞态条件 Race Condition  多个线程在临界区内执行，由于代码的执行序列不">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/.com//image-20250808154822655.png">
+<meta property="og:image" content="http://example.com/2025/08/08/synchronized%E5%9F%BA%E7%A1%80/synchronized%E5%9F%BA%E7%A1%80/image-20250808154822655.png">
 <meta property="article:published_time" content="2025-08-08T04:06:00.000Z">
-<meta property="article:modified_time" content="2025-08-08T07:57:36.090Z">
+<meta property="article:modified_time" content="2025-08-08T08:11:10.822Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/.com//image-20250808154822655.png">
+<meta name="twitter:image" content="http://example.com/2025/08/08/synchronized%E5%9F%BA%E7%A1%80/synchronized%E5%9F%BA%E7%A1%80/image-20250808154822655.png">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -220,8 +220,7 @@
 <p>同步方法底层也是有锁对象的：</p>
 <ul>
 <li><p>如果方法是实例方法：同步方法默认用 this 作为的锁对象</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title function_">test</span><span class="params">()</span> &#123;&#125; <span class="comment">//等价于</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">test</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">synchronized</span>(<span class="built_in">this</span>) &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title function_">test</span><span class="params">()</span> &#123;&#125; <span class="comment">//等价于</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">test</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">synchronized</span>(<span class="built_in">this</span>) &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
 <li><p>如果方法是静态方法：同步方法默认用类名 .class 作为的锁对象</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Test</span>&#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">test</span><span class="params">()</span> &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//等价于</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Test</span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">test</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">synchronized</span>(Test.class) &#123;&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
 </ul>
@@ -261,7 +260,7 @@
 <ul>
 <li>Mark Word 结构：最后两位是<strong>锁标志位</strong></li>
 </ul>
-<p><img src="/.com//image-20250808154822655.png" alt="image-20250808154822655"></p>
+<p><img src="synchronized%E5%9F%BA%E7%A1%80/image-20250808154822655.png" alt="image-20250808154822655"></p>
 
       
 

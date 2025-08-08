@@ -254,7 +254,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="Java线程"><a href="#Java线程" class="headerlink" title="Java线程"></a>Java线程</h2><h3 id="1-1线程的创建与运行"><a href="#1-1线程的创建与运行" class="headerlink" title="1.1线程的创建与运行"></a>1.1线程的创建与运行</h3><p>​	<strong>线程的启动必须调用 start() 方法</strong>，如果线程直接调用 run() 方法，相当于变成了普通类的执行，此时主线程将只有执行该线程</p>
+        <h2 id="Java线程"><a href="#Java线程" class="headerlink" title="Java线程"></a>Java线程</h2><h3 id="1-1线程的创建与运行"><a href="#1-1线程的创建与运行" class="headerlink" title="1.1线程的创建与运行"></a>1.1线程的创建与运行</h3><p>​    <strong>线程的启动必须调用 start() 方法</strong>，如果线程直接调用 run() 方法，相当于变成了普通类的执行，此时主线程将只有执行该线程</p>
 <h4 id="方法一-直接使用Thread"><a href="#方法一-直接使用Thread" class="headerlink" title="方法一,直接使用Thread"></a>方法一,直接使用Thread</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建线程对象</span></span><br><span class="line"><span class="type">Thread</span> <span class="variable">t</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Thread</span>() &#123;</span><br><span class="line">     <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line"> 		<span class="comment">// 要执行的任务</span></span><br><span class="line"> 	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// 启动线程</span></span><br><span class="line">t.start();</span><br></pre></td></tr></table></figure>
 
 <p>Thread 构造器：</p>
@@ -267,7 +267,7 @@
 </li>
 <li><p>缺点：线程类已经继承了 Thread 类无法继承其他类了，功能不能通过继承拓展（单继承的局限性）</p>
 </li>
-</ul></li></ul>
+</ul>
         
           <a class="article-more-a" href="/2025/06/07/Java%E7%BA%BF%E7%A8%8B/#more">more >></a>
         
