@@ -18,8 +18,9 @@
 <meta property="og:image" content="http://example.com/2025/08/08/synchronized%E5%9F%BA%E7%A1%80/synchronized%E5%9F%BA%E7%A1%80/image-20250808154822655.png">
 <meta property="og:image" content="http://example.com/2025/08/08/synchronized%E5%9F%BA%E7%A1%80/synchronized%E5%9F%BA%E7%A1%80/image-20250808172631251.png">
 <meta property="og:image" content="http://example.com/2025/08/08/synchronized%E5%9F%BA%E7%A1%80/synchronized%E5%9F%BA%E7%A1%80/image-20250808173628063.png">
+<meta property="og:image" content="e:\blog\source_posts\synchronized%E5%9F%BA%E7%A1%80\image-20250808174117238.png">
 <meta property="article:published_time" content="2025-08-08T04:06:00.000Z">
-<meta property="article:modified_time" content="2025-08-08T09:36:35.238Z">
+<meta property="article:modified_time" content="2025-08-08T09:46:16.533Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/2025/08/08/synchronized%E5%9F%BA%E7%A1%80/synchronized%E5%9F%BA%E7%A1%80/image-20250808154822655.png">
@@ -271,6 +272,13 @@
 <li>当 Thread-2 执行 synchronized(obj) 就会将 Monitor 的所有者 Owner 置为 Thread-2，Monitor 中只能有一个 Owner，<strong>obj 对象的 Mark Word 指向 Monitor</strong>，把<strong>对象原有的 MarkWord 存入线程栈中的锁记录</strong>中（轻量级锁部分详解）</li>
 </ul>
 <p><img src="synchronized%E5%9F%BA%E7%A1%80/image-20250808173628063.png" alt="image-20250808173628063"></p>
+<ul>
+<li>在 Thread-2 上锁的过程，Thread-3、Thread-4、Thread-5 也执行 synchronized(obj)，就会进入 EntryList BLOCKED（双向链表）</li>
+<li>Thread-2 执行完同步代码块的内容，根据 obj 对象头中 Monitor 地址寻找，设置 Owner 为空，把线程栈的锁记录中的对象头的值设置回 MarkWord</li>
+<li>唤醒 EntryList 中等待的线程来竞争锁，竞争是<strong>非公平的</strong>，如果这时有新的线程想要获取锁，可能直接就抢占到了，阻塞队列的线程就会继续阻塞</li>
+<li>WaitSet 中的 Thread-0，是以前获得过锁，但条件不满足进入 WAITING 状态的线程（wait-notify 机制）</li>
+</ul>
+<p><img src="E:\blog\source_posts\synchronized基础\image-20250808174117238.png" alt="image-20250808174117238"></p>
 
       
 
