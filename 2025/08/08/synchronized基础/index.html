@@ -8,16 +8,18 @@
   <link rel="dns-prefetch" href="http://example.com">
   <title>synchronized基础 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="**** 4共享模型之管程临界区 Critical Section  一个程序运行多个线程本身是没有问题的  问题出在多个线程访问共享资源  多个线程读共享资源其实也没有问题  在多个线程对共享资源读写操作时发生指令交错，就会出现问题     一段代码块内如果存在对共享资源的多线程读写操作，称这段代码块为临界区 竞态条件 Race Condition  多个线程在临界区内执行，由于代码的执行序列不">
+  <meta name="description" content="4共享模型之管程临界区 Critical Section  一个程序运行多个线程本身是没有问题的  问题出在多个线程访问共享资源  多个线程读共享资源其实也没有问题  在多个线程对共享资源读写操作时发生指令交错，就会出现问题     一段代码块内如果存在对共享资源的多线程读写操作，称这段代码块为临界区 竞态条件 Race Condition  多个线程在临界区内执行，由于代码的执行序列不同而导致结">
 <meta property="og:type" content="article">
 <meta property="og:title" content="synchronized基础">
 <meta property="og:url" content="http://example.com/2025/08/08/synchronized%E5%9F%BA%E7%A1%80/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="**** 4共享模型之管程临界区 Critical Section  一个程序运行多个线程本身是没有问题的  问题出在多个线程访问共享资源  多个线程读共享资源其实也没有问题  在多个线程对共享资源读写操作时发生指令交错，就会出现问题     一段代码块内如果存在对共享资源的多线程读写操作，称这段代码块为临界区 竞态条件 Race Condition  多个线程在临界区内执行，由于代码的执行序列不">
+<meta property="og:description" content="4共享模型之管程临界区 Critical Section  一个程序运行多个线程本身是没有问题的  问题出在多个线程访问共享资源  多个线程读共享资源其实也没有问题  在多个线程对共享资源读写操作时发生指令交错，就会出现问题     一段代码块内如果存在对共享资源的多线程读写操作，称这段代码块为临界区 竞态条件 Race Condition  多个线程在临界区内执行，由于代码的执行序列不同而导致结">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/2025/08/08/synchronized%E5%9F%BA%E7%A1%80/synchronized%E5%9F%BA%E7%A1%80/image-20250808154822655.png">
+<meta property="og:image" content="http://example.com/2025/08/08/synchronized%E5%9F%BA%E7%A1%80/synchronized%E5%9F%BA%E7%A1%80/image-20250808172631251.png">
+<meta property="og:image" content="http://example.com/2025/08/08/synchronized%E5%9F%BA%E7%A1%80/synchronized%E5%9F%BA%E7%A1%80/image-20250808173628063.png">
 <meta property="article:published_time" content="2025-08-08T04:06:00.000Z">
-<meta property="article:modified_time" content="2025-08-08T08:11:10.822Z">
+<meta property="article:modified_time" content="2025-08-08T09:36:35.238Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/2025/08/08/synchronized%E5%9F%BA%E7%A1%80/synchronized%E5%9F%BA%E7%A1%80/image-20250808154822655.png">
@@ -176,7 +178,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="4共享模型之管程"><a href="#4共享模型之管程" class="headerlink" title="**** 4共享模型之管程"></a>**** 4<strong>共享模型之管程</strong></h2><p><strong>临界区</strong> <strong>Critical Section</strong></p>
+        <h2 id="4共享模型之管程"><a href="#4共享模型之管程" class="headerlink" title="4共享模型之管程"></a>4<strong>共享模型之管程</strong></h2><p><strong>临界区</strong> <strong>Critical Section</strong></p>
 <ul>
 <li><p>一个程序运行多个线程本身是没有问题的</p>
 </li>
@@ -261,6 +263,14 @@
 <li>Mark Word 结构：最后两位是<strong>锁标志位</strong></li>
 </ul>
 <p><img src="synchronized%E5%9F%BA%E7%A1%80/image-20250808154822655.png" alt="image-20250808154822655"></p>
+<img src="synchronized基础/image-20250808172631251.png" alt="image-20250808172631251" style="zoom:80%;" />
+
+<p>工作流程：</p>
+<ul>
+<li>开始时 Monitor 中 Owner 为 null</li>
+<li>当 Thread-2 执行 synchronized(obj) 就会将 Monitor 的所有者 Owner 置为 Thread-2，Monitor 中只能有一个 Owner，<strong>obj 对象的 Mark Word 指向 Monitor</strong>，把<strong>对象原有的 MarkWord 存入线程栈中的锁记录</strong>中（轻量级锁部分详解）</li>
+</ul>
+<p><img src="synchronized%E5%9F%BA%E7%A1%80/image-20250808173628063.png" alt="image-20250808173628063"></p>
 
       
 
