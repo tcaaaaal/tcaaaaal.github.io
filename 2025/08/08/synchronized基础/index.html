@@ -6,15 +6,21 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>Archives | Hexo</title>
+  <title>synchronized基础 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/archives/index.html">
+  <meta name="description" content="**** 4共享模型之管程临界区 Critical Section  一个程序运行多个线程本身是没有问题的  问题出在多个线程访问共享资源  多个线程读共享资源其实也没有问题  在多个线程对共享资源读写操作时发生指令交错，就会出现问题     一段代码块内如果存在对共享资源的多线程读写操作，称这段代码块为临界区 竞态条件 Race Condition  多个线程在临界区内执行，由于代码的执行序列不">
+<meta property="og:type" content="article">
+<meta property="og:title" content="synchronized基础">
+<meta property="og:url" content="http://example.com/2025/08/08/synchronized%E5%9F%BA%E7%A1%80/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="**** 4共享模型之管程临界区 Critical Section  一个程序运行多个线程本身是没有问题的  问题出在多个线程访问共享资源  多个线程读共享资源其实也没有问题  在多个线程对共享资源读写操作时发生指令交错，就会出现问题     一段代码块内如果存在对共享资源的多线程读写操作，称这段代码块为临界区 竞态条件 Race Condition  多个线程在临界区内执行，由于代码的执行序列不">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/synchronized%E5%9F%BA%E7%A1%80/image-20250808120655903.png">
+<meta property="article:published_time" content="2025-08-08T04:06:00.000Z">
+<meta property="article:modified_time" content="2025-08-08T04:07:40.701Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/synchronized%E5%9F%BA%E7%A1%80/image-20250808120655903.png">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -150,76 +156,241 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
+            <article id="post-synchronized基础" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
+    <h1 class="article-title" itemprop="name">
+      synchronized基础
+    </h1>
   
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2025" class="archive-year">2025</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2025/08/08/synchronized%E5%9F%BA%E7%A1%80/" class="archive-article-date">
+
+        
+        <a href="/2025/08/08/synchronized%E5%9F%BA%E7%A1%80/" class="archive-article-date">
   	<time datetime="2025-08-08T04:06:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2025-08-08</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2025/08/08/synchronized%E5%9F%BA%E7%A1%80/">synchronized基础</a>
-    </h1>
-  
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="4共享模型之管程"><a href="#4共享模型之管程" class="headerlink" title="**** 4共享模型之管程"></a>**** 4<strong>共享模型之管程</strong></h2><p><strong>临界区</strong> <strong>Critical Section</strong></p>
+<ul>
+<li><p>一个程序运行多个线程本身是没有问题的</p>
+</li>
+<li><p>问题出在多个线程访问<strong>共享资源</strong></p>
+<ul>
+<li><p>多个线程读<strong>共享资源</strong>其实也没有问题</p>
+</li>
+<li><p>在多个线程对<strong>共享资源</strong>读写操作时发生指令交错，就会出现问题</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>一段代码块内如果存在对<strong>共享资源</strong>的多线程读写操作，称这段代码块为<strong>临界区</strong></p>
+<p><strong>竞态条件</strong> <strong>Race Condition</strong></p>
+<ul>
+<li>多个线程在临界区内执行，由于代码的<strong>执行序列不同</strong>而导致结果无法预测，称之为发生了<strong>竞态条件</strong></li>
+</ul>
+<span id="more"></span>
 
-        <div class="article-info info-on-right">
-          
-          
+<h3 id="4-1synchronized-解决方案"><a href="#4-1synchronized-解决方案" class="headerlink" title="4.1synchronized 解决方案"></a>4.1<strong>synchronized</strong> <strong>解决方案</strong></h3><p>synchronized 是可重入、不公平的重量级锁</p>
+<p>原则上：</p>
+<ul>
+<li>锁对象建议使用共享资源</li>
+<li>在实例方法中使用 this 作为锁对象，锁住的 this 正好是共享资源</li>
+<li>在静态方法中使用类名 .class 字节码作为锁对象，因为静态成员属于类，被所有实例对象共享，所以需要锁住类</li>
+</ul>
+<p>同步代码块格式：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">synchronized</span>(锁对象)&#123;</span><br><span class="line">	<span class="comment">// 临界区</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<p>实例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">demo</span> &#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="type">int</span> <span class="variable">counter</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="comment">//static修饰，则元素是属于类本身的，不属于对象  ，与类一起加载一次，只有一个</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Object</span> <span class="variable">room</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Object</span>();</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">        <span class="type">Thread</span> <span class="variable">t1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Thread</span>(() -&gt; &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; <span class="number">5000</span>; i++) &#123;</span><br><span class="line">                <span class="keyword">synchronized</span> (room) &#123;</span><br><span class="line">                    counter++;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;, <span class="string">&quot;t1&quot;</span>);</span><br><span class="line">        <span class="type">Thread</span> <span class="variable">t2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Thread</span>(() -&gt; &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; <span class="number">5000</span>; i++) &#123;</span><br><span class="line">                <span class="keyword">synchronized</span> (room) &#123;</span><br><span class="line">                    counter--;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;, <span class="string">&quot;t2&quot;</span>);</span><br><span class="line">        t1.start();</span><br><span class="line">        t2.start();</span><br><span class="line">        t1.join();</span><br><span class="line">        t2.join();</span><br><span class="line">        System.out.println(counter);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<hr>
+<h5 id="方法上的synchronized"><a href="#方法上的synchronized" class="headerlink" title="方法上的synchronized"></a>方法上的synchronized</h5><p>把出现线程安全问题的核心方法锁起来，每次只能一个线程进入访问</p>
+<p>synchronized 修饰的方法的不具备继承性，所以子类是线程不安全的，如果子类的方法也被 synchronized 修饰，两个锁对象其实是一把锁，而且是<strong>子类对象作为锁</strong></p>
+<p>用法：直接给方法加上一个修饰符 synchronized</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//同步方法</span></span><br><span class="line">修饰符 <span class="keyword">synchronized</span> 返回值类型 方法名(方法参数) &#123; </span><br><span class="line">	方法体；</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//同步静态方法</span></span><br><span class="line">修饰符 <span class="keyword">static</span> <span class="keyword">synchronized</span> 返回值类型 方法名(方法参数) &#123; </span><br><span class="line">	方法体；</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>同步方法底层也是有锁对象的：</p>
+<ul>
+<li><p>如果方法是实例方法：同步方法默认用 this 作为的锁对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title function_">test</span><span class="params">()</span> &#123;&#125; <span class="comment">//等价于</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">test</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">synchronized</span>(<span class="built_in">this</span>) &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如果方法是静态方法：同步方法默认用类名 .class 作为的锁对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Test</span>&#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">test</span><span class="params">()</span> &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//等价于</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Test</span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">test</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">synchronized</span>(Test.class) &#123;&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h5 id="不加-synchronized-的方法"><a href="#不加-synchronized-的方法" class="headerlink" title="不加 synchronized 的方法"></a><strong>不加</strong> <strong>synchronized</strong> <strong>的方法</strong></h5><p>不加 synchronzied 的方法就好比不遵守规则的人，不去老实排队（好比翻窗户进去的）</p>
+<h3 id="4-2变量的线程安全分析"><a href="#4-2变量的线程安全分析" class="headerlink" title="4.2变量的线程安全分析"></a>4.2<strong>变量的线程安全分析</strong></h3><p><strong>成员变量和静态变量是否线程安全？</strong></p>
+<ul>
+<li><p>如果它们没有共享，则线程安全</p>
+</li>
+<li><p>如果它们被共享了，根据它们的状态是否能够改变，又分两种情况</p>
+</li>
+<li><p>如果只有读操作，则线程安全</p>
+</li>
+<li><p>如果有读写操作，则这段代码是临界区，需要考虑线程安全</p>
+</li>
+</ul>
+<p><strong>局部变量是否线程安全？</strong></p>
+<ul>
+<li><p>局部变量是线程安全的</p>
+</li>
+<li><p>但局部变量引用的对象则未必</p>
+<ul>
+<li><p>如果该对象没有逃离方法的作用访问，它是线程安全的</p>
+</li>
+<li><p>如果该对象逃离方法的作用范围，需要考虑线程安全</p>
+</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">test1</span><span class="params">()</span> &#123;</span><br><span class="line">	 <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">10</span>;</span><br><span class="line"> 	i++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>每个线程调用 test1() 方法时局部变量 i，会在每个线程的栈帧内存中被创建多份，因此不存在共享</p>
+<h3 id="4-3Monitor"><a href="#4-3Monitor" class="headerlink" title="4.3Monitor"></a>4.3<strong>Monitor</strong></h3><p><strong>Java</strong> <strong>对象头</strong></p>
+<p>Monitor 被翻译为监视器或管程</p>
+<p>每个 Java 对象都可以关联一个 Monitor 对象，Monitor 也是 class，其<strong>实例存储在堆中</strong>，如果使用 synchronized 给对象上锁（重量级）之后，该对象头的 Mark Word 中就被设置指向 Monitor 对象的指针，这就是重量级锁</p>
+<ul>
+<li>Mark Word 结构：最后两位是<strong>锁标志位</strong></li>
+</ul>
+<p><img src="/./synchronized%E5%9F%BA%E7%A1%80/image-20250808120655903.png" alt="image-20250808120655903"></p>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2025/08/08/synchronized%E5%9F%BA%E7%A1%80/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2025/06/07/Java%E7%BA%BF%E7%A8%8B/" class="archive-article-date">
-  	<time datetime="2025-06-07T13:17:47.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2025-06-07</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2025/06/07/Java%E7%BA%BF%E7%A8%8B/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">我的第一篇文章</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2025/06/07/Java%E7%BA%BF%E7%A8%8B/">我的第一篇文章</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
   
 
-    
+  
+
+  
 
 
           </div>
@@ -242,8 +413,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
