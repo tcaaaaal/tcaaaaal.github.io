@@ -15,13 +15,15 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="4共享模型之管程临界区 Critical Section  一个程序运行多个线程本身是没有问题的  问题出在多个线程访问共享资源  多个线程读共享资源其实也没有问题  在多个线程对共享资源读写操作时发生指令交错，就会出现问题     一段代码块内如果存在对共享资源的多线程读写操作，称这段代码块为临界区 竞态条件 Race Condition  多个线程在临界区内执行，由于代码的执行序列不同而导致结">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/2025/08/08/synchronized%E5%9F%BA%E7%A1%80/image-20250808180500458.png">
-<meta property="og:image" content="http://example.com/2025/08/08/synchronized%E5%9F%BA%E7%A1%80/image-20250808180510879.png">
+<meta property="og:image" content="http://example.com/2025/08/08/synchronized%E5%9F%BA%E7%A1%80/image-1.png">
+<meta property="og:image" content="http://example.com/2025/08/08/synchronized%E5%9F%BA%E7%A1%80/image-2.png">
+<meta property="og:image" content="http://example.com/2025/08/08/synchronized%E5%9F%BA%E7%A1%80/image-3.png">
+<meta property="og:image" content="http://example.com/2025/08/08/synchronized%E5%9F%BA%E7%A1%80/image-4.png">
 <meta property="article:published_time" content="2025-08-08T04:06:00.000Z">
-<meta property="article:modified_time" content="2025-08-08T10:05:19.797Z">
+<meta property="article:modified_time" content="2025-08-08T10:20:39.107Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2025/08/08/synchronized%E5%9F%BA%E7%A1%80/image-20250808180500458.png">
+<meta name="twitter:image" content="http://example.com/2025/08/08/synchronized%E5%9F%BA%E7%A1%80/image-1.png">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -261,19 +263,21 @@
 <ul>
 <li>Mark Word 结构：最后两位是<strong>锁标志位</strong></li>
 </ul>
-<p><img src="/2025/08/08/synchronized%E5%9F%BA%E7%A1%80/image-20250808180500458.png" alt="image-20250808180500458"></p>
-<p><img src="/2025/08/08/synchronized%E5%9F%BA%E7%A1%80/image-20250808180510879.png" alt="image-20250808180510879"></p>
+<p><img src="/2025/08/08/synchronized%E5%9F%BA%E7%A1%80/image-1.png" alt="image-20250808180500458"></p>
+<p><img src="/2025/08/08/synchronized%E5%9F%BA%E7%A1%80/image-2.png" alt="image-20250808180510879"></p>
 <p>工作流程：</p>
 <ul>
 <li>开始时 Monitor 中 Owner 为 null</li>
 <li>当 Thread-2 执行 synchronized(obj) 就会将 Monitor 的所有者 Owner 置为 Thread-2，Monitor 中只能有一个 Owner，<strong>obj 对象的 Mark Word 指向 Monitor</strong>，把<strong>对象原有的 MarkWord 存入线程栈中的锁记录</strong>中（轻量级锁部分详解）</li>
 </ul>
+<p><img src="/2025/08/08/synchronized%E5%9F%BA%E7%A1%80/image-3.png" alt="image-20250808181519969"></p>
 <ul>
 <li>在 Thread-2 上锁的过程，Thread-3、Thread-4、Thread-5 也执行 synchronized(obj)，就会进入 EntryList BLOCKED（双向链表）</li>
 <li>Thread-2 执行完同步代码块的内容，根据 obj 对象头中 Monitor 地址寻找，设置 Owner 为空，把线程栈的锁记录中的对象头的值设置回 MarkWord</li>
 <li>唤醒 EntryList 中等待的线程来竞争锁，竞争是<strong>非公平的</strong>，如果这时有新的线程想要获取锁，可能直接就抢占到了，阻塞队列的线程就会继续阻塞</li>
 <li>WaitSet 中的 Thread-0，是以前获得过锁，但条件不满足进入 WAITING 状态的线程（wait-notify 机制）</li>
 </ul>
+<p><img src="/2025/08/08/synchronized%E5%9F%BA%E7%A1%80/image-4.png" alt="image-20250808181636572"></p>
 
       
 
